@@ -1,0 +1,146 @@
+<h1>Solving the ODE of the damped mass-spring oszillator</h1>
+
+<h2>Abstract</h2>
+
+<p>This program solves the ordinary 2nd order differential equation of the (damped) mass-spring oscillator in explicit form. This equation has the form: m d²/dt² u + k d/dt u + c u = F(t). Where <strong>t</strong> is the time, <strong>m</strong> is the mass, <strong>k</strong> is the velocity-proportional damping constant, <strong>c</strong> is the spring constant (spring stiffness), <strong>u</strong> is the displacement as a function of time and <strong>F(t)</strong> is the external force acting on the oscillator. <br />
+For the time step integration, one of the following methods can be chosen: Euler[1], Adams-Bashforth 2nd order[3], Runge-Kutta[3] 2nd order and Runge-Kutta 4th order. <br />
+The program clearly demonstrates the differences in convergence behavior that occur with the different methods of time step integration. In addition, this program can also be integrated as a subsystem into other programs.</p>
+
+<h2>Table of contents</h2>
+
+<ul>
+<li><a href="#license">License</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#directory-and-file-structure">Directory and file structure</a></li>
+<li><a href="#installation-instructions">Installation instructions</a></li>
+<li><a href="#usage-instructions">Usage instructions</a></li>
+<li><a href="#help-and-documentation">Help and Documentation</a></li>
+<li><a href="#related-software">References</a></li>
+<li><a href="#revision-and-release-history">Revision and release history</a></li>
+</ul>
+
+<h2>License</h2>
+
+<p>Copyright 2024 Jakob Harden (jakob.harden@tugraz.at, Graz University of Technology, Graz, Austria)</p>
+
+<p>This file is part of the PhD thesis of Jakob Harden.</p>
+
+<p>All GNU Octave function files (*.m) are licensed under the <em>GNU Affero General Public Licence v1.0</em>. See also licence information file <em>LICENSE</em>.</p>
+
+<p>All files in the <strong>octave/results</strong> directory are licensed under the <em>Creative Commons Attribution 4.0 International</em> license. See also: <a href="https://creativecommons.org/licenses/by/4.0/deed.en">Licence deed</a></p>
+
+<h2>Prerequisites</h2>
+
+<p>The only requirement for using this program is a proper installation of <a href="https://octave.org/">GNU Octave</a>, either version 6.2.0 or later.</p>
+
+<h2>Directory and file structure</h2>
+
+<p><code>
+odesolver <br />
+├── octave <br />
+│   ├── results <br />
+│   ├── init.m <br />
+│   ├── showlicence.m <br />
+│   ├── solve_ode.m <br />
+│   └── test_solve_ode.m <br />
+├── LICENSE <br />
+├── README.html <br />
+└── README.md
+</code></p>
+
+<ul>
+<li><strong>octave</strong> ... GNU Octave function files
+<ul>
+<li><strong>results</strong> ... computation results, output files</li>
+<li><em>init.m</em> ... function file, initialize program environment</li>
+<li><em>showlicence.m</em> ... function file, print license information on the screen</li>
+<li><em>solve_ode.m</em> ... function file, ODE solver</li>
+<li><em>test_solve_ode.m</em> ... function file, solver tests</li>
+</ul></li>
+<li><em>LICENSE</em> ... AGPL license terms and conditions</li>
+<li><em>README.html</em> ... html version of the <em>README.md</em> file</li>
+<li><em>README.md</em> ... this file</li>
+</ul>
+
+<h2>Installation instructions</h2>
+
+<ol>
+<li>Copy the program directory <strong>odesolver</strong> to a location of your choice. e.g. <strong>/home/acme/science/odesolver</strong>.   </li>
+<li>Open GNU Octave.   </li>
+<li>Make the program directory <strong>/home/acme/science/odesolver</strong> the working directory.   </li>
+</ol>
+
+<h2>Usage instructions</h2>
+
+<ol>
+<li>Open GNU Octave.   </li>
+<li>Initialize program.   </li>
+<li>Run script files.   </li>
+</ol>
+
+<h3>Initialize program (command line interface, CLI)</h3>
+
+<p>The <em>init</em> command initializes the program. The initialization must be run once before executing all the other functions. The command creates the folder structure for the output files in the <strong>octave/results</strong> directory.</p>
+
+<p><code>
+    octave: &gt;&gt; init();
+</code></p>
+
+<h3>Run tests (CLI)</h3>
+
+<p>Several tests are provided to reproduce the test results for some simple predefined systems. The test computation can be run with the command below. When the analysis has finished, the results are written to the above mentioned results directory.</p>
+
+<p><code>
+    octave: &gt;&gt; test_solve_ode();
+</code></p>
+
+<p>[!NOTE] The tests can also be used as a guide to solve the ODE of the damped mass-spring oszillator with boundary conditions of your choice.</p>
+
+<h3>Using the solver (CLI)</h3>
+
+<p>The solver can also be used as a stand-alone program or as a subsystem of another program. The function call looks like this:</p>
+
+<p><code>
+    octave: &gt;&gt; [r_u, r_v, r_a] = solve_ode(p_etp, p_stp, p_par, p_rhs, p_bc0);
+</code></p>
+
+<p><strong>Legend:</strong></p>
+
+<ul>
+<li>r_u ... displacement array u(t)</li>
+<li>r_v ... velocity array v(t)</li>
+<li>r_a ... acceleration array a(t)</li>
+<li>p_etp ... equation type; 'dmso' = damped mass-spring oszillator, 'mso' = undamped mass-spring oszillator</li>
+<li>p_stp ... solver type used for the time-step integration; 'euler' = Euler method, 'ab2' = Adams-Bashford method, 'rk2' = Runge-Kutta 2nd order, 'rk4' = Runge-Kutta 4th order</li>
+<li>p_par ... analysis parameter array (num_time_steps, width_time_step, mass, damping_constant, spring_constant)</li>
+<li>p_rhs ... right-hand-side of the inhomogenous ODE, array of external forces</li>
+<li>p_bc0 ... initial state boundary conditions (t = 0), array of (initial_displacement, initial_velocity)</li>
+</ul>
+
+<h2>Help and Documentation</h2>
+
+<p>All function files contain an adequate function description and instructions on how to use the functions. This documentation can be displayed using GNU Octave's command line interface by entering the following command:</p>
+
+<p><code>
+    octave: &gt;&gt; help function_file_name;
+</code></p>
+
+<p>Additionally, literature sources are provided, serving as a guide to understand the implementation.</p>
+
+<h2>References</h2>
+
+<p>[1] Wikipedia contributors. (2024, November 15). Euler method. In Wikipedia, The Free Encyclopedia. Retrieved 12:52, December 8, 2024, from <a href="https://en.wikipedia.org/w/index.php?title=Euler_method&amp;oldid=1257584385">https://en.wikipedia.org/w/index.php?title=Euler_method&amp;oldid=1257584385</a></p>
+
+<p>[2] Wikipedia contributors. (2024, December 3). Runge–Kutta methods. In Wikipedia, The Free Encyclopedia. Retrieved 12:50, December 8, 2024, from <a href="https://en.wikipedia.org/w/index.php?title=Runge%E2%80%93Kutta_methods&amp;oldid=1260972675">https://en.wikipedia.org/w/index.php?title=Runge%E2%80%93Kutta_methods&amp;oldid=1260972675</a></p>
+
+<p>[3] Wikipedia contributors. (2024, September 23). Linear multistep method. In Wikipedia, The Free Encyclopedia. Retrieved 12:57, December 8, 2024, from <a href="https://en.wikipedia.org/w/index.php?title=Linear_multistep_method&amp;oldid=1247156850">https://en.wikipedia.org/w/index.php?title=Linear<em>multistep</em>method&amp;oldid=1247156850</a></p>
+
+<h2>Revision and release history</h2>
+
+<h3>2024-12-08, version 1.0</h3>
+
+<ul>
+<li>published/released version 1.0, by Jakob Harden   </li>
+<li>url: <a href="https://doi.org/10.3217/499v5-q3h59">TU Graz Repository</a>   </li>
+<li>doi: 10.3217/499v5-q3h59   </li>
+</ul>
