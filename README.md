@@ -26,7 +26,7 @@ Copyright 2024 Jakob Harden (jakob.harden@tugraz.at, Graz University of Technolo
 
 This file is part of the PhD thesis of Jakob Harden.
 
-All GNU Octave function files (\*.m) are licensed under the *GNU Affero General Public Licence v1.0*. See also licence information file *LICENSE*.
+All GNU Octave function files (\*.m) are licensed under the *GNU Affero General Public Licence v3.0*. See also licence information file *LICENSE*.
 
 All files in the **octave/results** directory are licensed under the *Creative Commons Attribution 4.0 International* license. See also: [Licence deed](https://creativecommons.org/licenses/by/4.0/deed.en)
 
