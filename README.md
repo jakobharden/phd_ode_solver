@@ -16,7 +16,7 @@ The program clearly demonstrates the differences in convergence behavior that oc
 - [Installation instructions](#installation-instructions)
 - [Usage instructions](#usage-instructions)
 - [Help and Documentation](#help-and-documentation)
-- [References](#related-software)
+- [References](#references)
 - [Revision and release history](#revision-and-release-history)
 
 
