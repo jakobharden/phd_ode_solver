@@ -2,8 +2,8 @@
 ##
 ## Usage: init()
 ##
-## OctODESolver is a simple analysis program to solve ordinary differential equations in 1D space.
-## Copyright (C) 2024 Jakob Harden
+## OctODESolver is a simple analysis program to solve the ODE of the damped mass-spring oscillator in 1D space and time-domain.
+## Copyright (C) 2024 Jakob Harden (Graz University of Technology)
 ##
 ## This file is part of OctODESolver.
 ##
@@ -26,10 +26,6 @@
 ##   LinkedIn: https://www.linkedin.com/in/jakobharden/
 ##
 function init()
-  
-  ## load packages
-  pkg load signal;
-  pkg load video;
   
   ## init result directories
   dn_results = 'results';

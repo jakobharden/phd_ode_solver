@@ -8,8 +8,8 @@
 ##   p_mod = "w": print warranty disclaimer on screen
 ##   p_mod = "c": print copyright notice on screen
 ##
-## OctODESolver is a simple analysis program to solve ordinary differential equations in 1D space.
-## Copyright (C) 2024 Jakob Harden
+## OctODESolver is a simple analysis program to solve the ODE of the damped mass-spring oscillator in 1D space and time-domain.
+## Copyright (C) 2024 Jakob Harden (Graz University of Technology)
 ##
 ## This file is part of OctODESolver.
 ##
@@ -33,8 +33,14 @@
 ##
 function showlicence(p_mod)
   
+  ## check arguments
+  if (nargin < 1)
+    p_mod = 'c';
+  endif
+  
   switch (p_mod)
     case {"w", "W"}
+      ## this text is a copy from the AGPL warranty disclaimer (section 15 and 16).
       disp("Licence terms and conditions section 15 and 16 (see also file COPYING)");
       disp("  ");
       disp("15. Disclaimer of Warranty.");
@@ -61,20 +67,21 @@ function showlicence(p_mod)
       disp("  The file COPYING contains the complete licence terms and conditions.");
       disp("  ");
     case {"c", "C"}
-      disp("  WAVSIM123 is free software: you can redistribute it and/or modify");
+      ## this text is a copy of the AGPL license information.
+      disp("  OctODESolver is free software: you can redistribute it and/or modify");
       disp("  it under the terms of the GNU General Public License as published by");
       disp("  the Free Software Foundation, either version 3 of the License, or");
       disp("  (at your option) any later version.");
       disp("  ");
-      disp("  WAVSIM123 is distributed in the hope that it will be useful,");
+      disp("  OctODESolver is distributed in the hope that it will be useful,");
       disp("  but WITHOUT ANY WARRANTY; without even the implied warranty of");
       disp("  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the");
       disp("  GNU General Public License for more details.");
       disp("  ");
       disp("  You should have received a copy of the GNU General Public License");
-      disp("  along with WAVSIM123.  If not, see <http://www.gnu.org/licenses/>.");
+      disp("  along with OctODESolver.  If not, see <http://www.gnu.org/licenses/>.");
       disp("  ");
-      disp("  The file COPYING contains the complete licence terms and conditions.");
+      disp("  The file LICENSE contains the complete licence terms and conditions.");
       disp("  ");
     otherwise
       help showlicence;

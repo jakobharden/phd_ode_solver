@@ -13,6 +13,7 @@
 ##
 ## Equation types:
 ##   p_etp = 'dmso': damped mass-spring oszillator, elliptic ODE, m * d^2/dt^2 u + k * d/dt u + c * u = 0
+##   p_etp = 'mso':  mass-spring oszillator, elliptic ODE, m * d^2/dt^2 u + c * u = 0
 ##
 ## Solver types:
 ##   p_stp = 'euler': Euler method, explicit
@@ -21,20 +22,21 @@
 ##   p_stp = 'rk4': Runge-Kutta method, four-step, explicit
 ##
 ## Parameters:
-##   p_par = [ndt, dt, m, k, c] ... p_etp = 'dmso'
+##   p_etp = 'dmso': p_par = [ndt, dt, m, k, c]
+##   p_etp = 'mso':  p_par = [ndt, dt, m, c]
 ##
 ## Boundary conditions:
-##   p_bc0 = [u0, v0] ... p_etp = 'dmso'
+##   p_bc0 = [u0, v0] ... p_etp = 'dmso' or 'mso'
 ##
 ## Notes:
 ##   ndt ... number of time steps
 ##    dt ... time step width
 ##     m ... mass
-##     k ... damping constant
-##     c ... spring constant
+##     k ... damping constant, velocity-proportional
+##     c ... spring constant, stiffness
 ##
-## OctODESolver is a simple analysis program to solve ordinary differential equations in 1D space.
-## Copyright (C) 2024 Jakob Harden
+## OctODESolver is a simple analysis program to solve the ODE of the damped mass-spring oscillator in 1D space and time-domain.
+## Copyright (C) 2024 Jakob Harden (Graz University of Technology)
 ##
 ## This file is part of OctODESolver.
 ##
@@ -61,7 +63,17 @@ function [r_u, r_v, r_a] = solve_ode(p_etp, p_stp, p_par, p_rhs, p_bc0)
   ## switch ODE type
   switch (p_etp)
     case 'dmso'
+      ## damped mass-spring oszillator
       [r_u, r_v, r_a] = solve_dmso(p_stp, p_par, p_rhs, p_bc0);
+    case 'mso'
+      ## mass-spring oszillator
+      par = zeros(size(p_par));
+      par(1) = p_par(1);
+      par(2) = p_par(2);
+      par(3) = p_par(3);
+      par(4) = 0;
+      par(5) = p_par(4);
+      [r_u, r_v, r_a] = solve_dmso(p_stp, par, p_rhs, p_bc0);
     otherwise
       error('ODE type not implemented yet! etp = %s', p_etp);
   endswitch
@@ -70,6 +82,8 @@ endfunction
 
 
 function [r_u, r_v, r_a] = solve_dmso(p_stp, p_par, p_rhs, p_bc0)
+  ## Solve ODE for the damped mass-spring oszillator
+  ##
   ## p_stp ... solver type, <str>
   ## p_par ... equation parameter array, [<dbl>]
   ## p_rhs ... right-hand-side of inhomogeneous equation [n x 1], [<dbl>]
@@ -93,7 +107,7 @@ function [r_u, r_v, r_a] = solve_dmso(p_stp, p_par, p_rhs, p_bc0)
   ## spring constant
   c = p_par(5);
   
-  ## calculation values
+  ## calculation values (equation constants divided by the mass)
   km = k / m;
   cm = c / m;
   rhsm = p_rhs / m;
@@ -204,7 +218,7 @@ endfunction
 function [r_k] = eval_dmso(p_km, p_cm, p_u, p_v, p_r)
   ## Evaluate differential equation of damped mass spring oszillator
   ##
-  ## Note: the value returned is an acceleration, it is the slope of the velocity function
+  ## Note that the value returned is an acceleration, it is the slope of the velocity function
   ##
   ## p_km ... k/m, <dbl>
   ## p_cm ... c/m, <dbl>
@@ -220,8 +234,6 @@ endfunction
 
 function [r_u2, r_v2, r_a2] = update_uva(p_dt, p_k1, p_u1, p_v1)
   ## Update displacement, velocity and acceleration (evaluate current step)
-  ##
-  ## Note: the value returned is an acceleration, it is the slope of the velocity function
   ##
   ## p_dt ... time increment, <dbl>
   ## p_k1 ... slope for velocity increment, <dbl>

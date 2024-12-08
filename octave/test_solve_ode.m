@@ -2,8 +2,8 @@
 ##
 ## Usage: test_solve_ode()
 ##
-## OctODESolver is a simple analysis program to solve ordinary differential equations in 1D space.
-## Copyright (C) 2024 Jakob Harden
+## OctODESolver is a simple analysis program to solve the ODE of the damped mass-spring oscillator in 1D space and time-domain.
+## Copyright (C) 2024 Jakob Harden (Graz University of Technology)
 ##
 ## This file is part of OctODESolver.
 ##
@@ -27,7 +27,7 @@
 ##
 function test_solve_ode()
   
-  ## test 1: homogeneous ODE
+  ## test 1: homogeneous ODE, damped mass-spring oszillator
   ## BC, t=0: u=1, v=0
   ndt = 300;
   dt = 0.1;
@@ -46,13 +46,38 @@ function test_solve_ode()
   [u3, v3, a3] = solve_ode(eq, stp, par, rhs, bc0);
   stp = 'rk4'; # Runge-Kutta four-step
   [u4, v4, a4] = solve_ode(eq, stp, par, rhs, bc0);
-  tit = 'Homogeneous ODE';
+  tit = sprintf('Homogeneous ODE, u_0 = %d, v_0 = %d', bc0);
   tid = 1;
   plot_results(u1, u2, u3, u4, rhs, tit, 1, tid);
   plot_results(v1, v2, v3, v4, rhs, tit, 2, tid);
   plot_results(a1, a2, a3, a4, rhs, tit, 3, tid);
   
-  ## test 2: inhomogeneous ODE
+  ## test 2: homogeneous ODE, damped mass-spring oszillator
+  ## BC, t=0: u=0, v=1
+  ndt = 300;
+  dt = 0.1;
+  m = 1;
+  c = 1;
+  k = 0.5;
+  par = [ndt, dt, m, k, c];
+  bc0 = [0, 1];
+  rhs = zeros(ndt, 1);
+  eq = 'dmso'; # damped mass-spring oszillator
+  stp = 'euler'; # explicit Euler method
+  [u1, v1, a1] = solve_ode(eq, stp, par, rhs, bc0);
+  stp = 'ab2'; # Adams-Bashforth method
+  [u2, v2, a2] = solve_ode(eq, stp, par, rhs, bc0);
+  stp = 'rk2'; # Runge-Kutta two-step
+  [u3, v3, a3] = solve_ode(eq, stp, par, rhs, bc0);
+  stp = 'rk4'; # Runge-Kutta four-step
+  [u4, v4, a4] = solve_ode(eq, stp, par, rhs, bc0);
+  tit = sprintf('Homogeneous ODE, u_0 = %d, v_0 = %d', bc0);
+  tid = 2;
+  plot_results(u1, u2, u3, u4, rhs, tit, 1, tid);
+  plot_results(v1, v2, v3, v4, rhs, tit, 2, tid);
+  plot_results(a1, a2, a3, a4, rhs, tit, 3, tid);
+  
+  ## test 3: inhomogeneous ODE, damped mass-spring oszillator
   ## BC, t=0: u=0, v=0
   ndt = 300;
   dt = 0.1;
@@ -74,13 +99,13 @@ function test_solve_ode()
   [u3, v3, a3] = solve_ode(eq, stp, par, rhs, bc0);
   stp = 'rk4'; # Runge-Kutta four-step
   [u4, v4, a4] = solve_ode(eq, stp, par, rhs, bc0);
-  tit = 'Inhomogeneous ODE: RHS = sin(x*8*pi)*exp(-5*x)';
-  tid = 2;
+  tit = 'Inhomogeneous ODE: u_0 = 0, v_0 = 0, RHS = sin(t*8*pi)*exp(-5*t)';
+  tid = 3;
   plot_results(u1, u2, u3, u4, rhs, tit, 1, tid);
   plot_results(v1, v2, v3, v4, rhs, tit, 2, tid);
   plot_results(a1, a2, a3, a4, rhs, tit, 3, tid);
   
-  ## test 3: inhomogeneous ODE
+  ## test 4: inhomogeneous ODE, damped mass-spring oszillator
   ## BC, t=0: u=0, v=0
   ndt = 300;
   dt = 0.1;
@@ -102,13 +127,13 @@ function test_solve_ode()
   [u3, v3, a3] = solve_ode(eq, stp, par, rhs, bc0);
   stp = 'rk4'; # Runge-Kutta four-step
   [u4, v4, a4] = solve_ode(eq, stp, par, rhs, bc0);
-  tit = 'Inhomogeneous ODE: RHS = sin(x*8*pi)*exp(-5*x)*(1-exp(-12*x))';
-  tid = 3;
+  tit = 'Inhomogeneous ODE: u_0 = 0, v_0 = 0, RHS = sin(t*8*pi)*exp(-5*t)*(1-exp(-12*t))';
+  tid = 4;
   plot_results(u1, u2, u3, u4, rhs, tit, 1, tid);
   plot_results(v1, v2, v3, v4, rhs, tit, 2, tid);
   plot_results(a1, a2, a3, a4, rhs, tit, 3, tid);
   
-  ## test 4: inhomogeneous ODE
+  ## test 5: inhomogeneous ODE, damped mass-spring oszillator
   ## BC, t=0: u=0, v=0
   ndt = 300;
   dt = 0.1;
@@ -129,8 +154,56 @@ function test_solve_ode()
   [u3, v3, a3] = solve_ode(eq, stp, par, rhs, bc0);
   stp = 'rk4'; # Runge-Kutta four-step
   [u4, v4, a4] = solve_ode(eq, stp, par, rhs, bc0);
-  tit = 'Inhomogeneous ODE: RHS = exp(-8*x)*(1-exp(-12*x))';
-  tid = 4;
+  tit = 'Inhomogeneous ODE: u_0 = 0, v_0 = 0, RHS = exp(-8*t)*(1-exp(-12*t))';
+  tid = 5;
+  plot_results(u1, u2, u3, u4, rhs, tit, 1, tid);
+  plot_results(v1, v2, v3, v4, rhs, tit, 2, tid);
+  plot_results(a1, a2, a3, a4, rhs, tit, 3, tid);
+  
+  ## test 6: homogeneous ODE, mass-spring oszillator
+  ## BC, t=0: u=1, v=0
+  ndt = 300;
+  dt = 0.1;
+  m = 1;
+  c = 1;
+  par = [ndt, dt, m, c];
+  bc0 = [1, 0];
+  rhs = zeros(ndt, 1);
+  eq = 'mso'; # mass-spring oszillator
+  stp = 'euler'; # explicit Euler method
+  [u1, v1, a1] = solve_ode(eq, stp, par, rhs, bc0);
+  stp = 'ab2'; # Adams-Bashforth method
+  [u2, v2, a2] = solve_ode(eq, stp, par, rhs, bc0);
+  stp = 'rk2'; # Runge-Kutta two-step
+  [u3, v3, a3] = solve_ode(eq, stp, par, rhs, bc0);
+  stp = 'rk4'; # Runge-Kutta four-step
+  [u4, v4, a4] = solve_ode(eq, stp, par, rhs, bc0);
+  tit = sprintf('Homogeneous ODE, u_0 = %d, v_0 = %d', bc0);
+  tid = 6;
+  plot_results(u1, u2, u3, u4, rhs, tit, 1, tid);
+  plot_results(v1, v2, v3, v4, rhs, tit, 2, tid);
+  plot_results(a1, a2, a3, a4, rhs, tit, 3, tid);
+  
+  ## test 7: homogeneous ODE, mass-spring oszillator
+  ## BC, t=0: u=0, v=1
+  ndt = 300;
+  dt = 0.1;
+  m = 1;
+  c = 1;
+  par = [ndt, dt, m, c];
+  bc0 = [0, 1];
+  rhs = zeros(ndt, 1);
+  eq = 'mso'; # mass-spring oszillator
+  stp = 'euler'; # explicit Euler method
+  [u1, v1, a1] = solve_ode(eq, stp, par, rhs, bc0);
+  stp = 'ab2'; # Adams-Bashforth method
+  [u2, v2, a2] = solve_ode(eq, stp, par, rhs, bc0);
+  stp = 'rk2'; # Runge-Kutta two-step
+  [u3, v3, a3] = solve_ode(eq, stp, par, rhs, bc0);
+  stp = 'rk4'; # Runge-Kutta four-step
+  [u4, v4, a4] = solve_ode(eq, stp, par, rhs, bc0);
+  tit = sprintf('Homogeneous ODE, u_0 = %d, v_0 = %d', bc0);
+  tid = 7;
   plot_results(u1, u2, u3, u4, rhs, tit, 1, tid);
   plot_results(v1, v2, v3, v4, rhs, tit, 2, tid);
   plot_results(a1, a2, a3, a4, rhs, tit, 3, tid);
@@ -157,7 +230,7 @@ function plot_results(p_x1, p_x2, p_x3, p_x4, p_rhs, p_tit, p_rtp, p_tid)
   endswitch
   
   ## plot functions
-  fh = figure();
+  fh = figure('position', [100, 100, 800, 800/1.62]);
   grid on;
   hold on;
   plot(p_rhs, ';RHS;', 'linewidth', 2, 'color', [0.5, 0.5, 0.5]);
@@ -166,9 +239,12 @@ function plot_results(p_x1, p_x2, p_x3, p_x4, p_rhs, p_tit, p_rtp, p_tid)
   plot(p_x3, ';Runge-Kutta 2;');
   plot(p_x4, ';Runge-Kutta 4;');
   hold off;
-  title(p_tit);
+  title(sprintf('%s', p_tit));
   xlabel('time step [n]');
   ylabel(lbl);
+  legend('location', 'eastoutside', 'box', 'off')
+  annotation('textbox', [0, 0, 20, 0.1], ...
+    'string', 'CC BY-4.0 Jakob Harden (Graz University of Technology)', 'fontsize', 8, 'linestyle', 'none');
   
   ## save figure
   fextpng = 'png';
